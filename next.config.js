@@ -92,6 +92,6 @@ const config = {
 
 module.exports = withBundleAnalyzer(withSentryConfig(config, sentryWebpackPluginOptions))
 
-module.exports = {
-  basePath: '/swap',
-}
+// module.exports = {
+//   basePath: '/swap',
+// }
