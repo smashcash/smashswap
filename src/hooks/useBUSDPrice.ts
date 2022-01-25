@@ -71,7 +71,7 @@ export default function useBUSDPrice(currency?: Currency): Price | undefined {
 }
 
 export const useCakeBusdPrice = (): Price | undefined => {
-  const cakeBusdPrice = useBUSDPrice(tokens.cake)
+  const cakeBusdPrice = useBUSDPrice(tokens.smash)
   return cakeBusdPrice
 }
 

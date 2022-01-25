@@ -42,7 +42,7 @@ const config = {
   async redirects() {
     return [
       {
-        source: '/swap',
+        source: '/',
         destination: '/swap',
         permanent: true,
       },
