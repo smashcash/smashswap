@@ -41,11 +41,11 @@ const config = {
   },
   async redirects() {
     return [
-      {
-        source: '/',
-        destination: '/swap',
-        permanent: true,
-      },
+      // {
+      //   source: '/',
+      //   destination: '/swap',
+      //   permanent: true,
+      // },
       {
         source: '/send',
         destination: '/swap',
@@ -92,6 +92,6 @@ const config = {
 
 module.exports = withBundleAnalyzer(withSentryConfig(config, sentryWebpackPluginOptions))
 
-// module.exports = {
-//   basePath: '/swap',
-// }
+module.exports = {
+  basePath: '/exchange',
+}
