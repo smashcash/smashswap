@@ -1,6 +1,6 @@
 import React from 'react'
-import Home from '../views/Home'
+import Swap from '../views/Swap'
 
-const IndexPage = () => <Home />
+const IndexPage = () => <Swap />
 
 export default IndexPage
