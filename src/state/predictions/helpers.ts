@@ -399,6 +399,8 @@ export const getRoundsData = async (epochs: number[]): Promise<PredictionsRounds
     params: [epoch],
   }))
   const response = await multicallv2<PredictionsRoundsResponse[]>(predictionsAbi, calls)
+  console.log('round data === ')
+  console.log(response)
   return response
 }
 
