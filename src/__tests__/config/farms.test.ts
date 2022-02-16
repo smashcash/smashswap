@@ -37,7 +37,7 @@ describe('Config farms', () => {
 
   // The first pid using the new factory
   const START_PID = 365
-  const FACTORY_ADDRESS = '0x714F92e7FBCB9602bedfb8303226e2853AA264ce'
+  const FACTORY_ADDRESS = '0x5C69bEe701ef814a2B6a3EDD4B1652CB9cc5aA6f'
   const newFarmsToTest = farmsToTest.filter((farmSet) => farmSet[0] >= START_PID)
 
   it.each(newFarmsToTest)('farm %d is using correct factory address', async (pid, farm) => {
