@@ -62,6 +62,10 @@ import PriceChartContainer from './components/Chart/PriceChartContainer'
 import { StyledInputCurrencyWrapper, StyledSwapContainer } from './styles'
 import CurrencyInputHeader from './components/CurrencyInputHeader'
 
+import usePollOraclePrice from '../Predictions/hooks/usePollOraclePrice'
+import useGetLastOraclePrice from '../Predictions/hooks/useGetLatestOraclePrice'
+import { formatBigNumberToFixed } from 'utils/formatBalance'
+
 const Label = styled(Text)`
   font-size: 12px;
   font-weight: bold;
@@ -87,6 +91,9 @@ const SwitchIconButton = styled(IconButton)`
 `
 
 export default function Swap() {
+
+  usePollOraclePrice();
+
   const router = useRouter()
   const loadedUrlParams = useDefaultsFromURLSearch()
   const { t } = useTranslation()
@@ -96,7 +103,7 @@ export default function Swap() {
   const [isChartDisplayed, setIsChartDisplayed] = useState(userChartPreference)
 
   useEffect(() => {
-    setUserChartPreference(isChartDisplayed)
+    setUserChartPreference(isChartDisplayed);
   }, [isChartDisplayed, setUserChartPreference])
 
   // token warning stuff
@@ -352,7 +359,7 @@ export default function Swap() {
     true,
     true,
     'confirmSwapModal',
-  )
+  )  
 
   return (
     <Page removePadding={isChartExpanded} hideFooterOnDesktop={isChartExpanded}>

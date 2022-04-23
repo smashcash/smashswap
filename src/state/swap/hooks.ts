@@ -1,5 +1,5 @@
 import { parseUnits } from '@ethersproject/units'
-import { Currency, CurrencyAmount, ETHER, JSBI, Token, TokenAmount, Trade } from '@pancakeswap/sdk'
+import { Currency, CurrencyAmount, ETHER, JSBI, Token, TokenAmount, Trade, Price } from '@pancakeswap/sdk'
 import { ParsedQs } from 'qs'
 import { useCallback, useEffect, useMemo, useState } from 'react'
 import { useDispatch, useSelector } from 'react-redux'
@@ -39,6 +39,42 @@ import { derivedPairByDataIdSelector, pairByDataIdSelector } from './selectors'
 import { DEFAULT_INPUT_CURRENCY, DEFAULT_OUTPUT_CURRENCY } from './constants'
 import fetchDerivedPriceData from './fetch/fetchDerivedPriceData'
 import { pairHasEnoughLiquidity } from './fetch/utils'
+
+// import useGetLastOraclePrice from '../../views/Predictions/hooks/useGetLatestOraclePrice'
+import { formatBigNumberToFixed } from 'utils/formatBalance'
+
+
+import { ethers } from 'ethers'
+import useLastUpdated from 'hooks/useLastUpdated'
+import { getChainlinkOracleContract } from 'utils/contractHelpers'
+
+export function useGetLatestOraclePrice(seconds = 10) {
+  const [price, setPrice] = useState(ethers.BigNumber.from(0))
+  const { lastUpdated, setLastUpdated: refresh } = useLastUpdated()
+
+  useEffect(() => {
+    const fetchPrice = async () => {
+      const contract = getChainlinkOracleContract()
+      const response = await contract.latestAnswer()
+      setPrice(response)
+    }
+
+    fetchPrice()
+  }, [lastUpdated, setPrice])
+
+  useEffect(() => {
+    refresh()
+    const timer = setInterval(() => {
+      refresh()
+    }, seconds * 1000)
+
+    return () => {
+      clearInterval(timer)
+    }
+  }, [seconds, refresh])
+
+  return { price, lastUpdated, refresh }
+}
 
 export function useSwapState(): AppState['swap'] {
   return useSelector<AppState, AppState['swap']>((state) => state.swap)
@@ -190,7 +226,21 @@ export function useDerivedSwapInfo(): {
   const bestTradeExactIn = useTradeExactIn(isExactIn ? parsedAmount : undefined, outputCurrency ?? undefined)
   const bestTradeExactOut = useTradeExactOut(inputCurrency ?? undefined, !isExactIn ? parsedAmount : undefined)
 
-  const v2Trade = isExactIn ? bestTradeExactIn : bestTradeExactOut
+  const v2Trade = isExactIn ? bestTradeExactIn : bestTradeExactOut  
+  const {price} = useGetLatestOraclePrice();
+  if (v2Trade?.executionPrice?.baseCurrency?.symbol === "BNB" && 
+      v2Trade?.executionPrice?.quoteCurrency?.symbol === "BUSD") {
+        console.log("oracle price => ", price)
+        const priceAsNumber = parseFloat(formatBigNumberToFixed(price, 3, 8))
+        console.log("priceAsNumber => ", priceAsNumber);
+  }  
+
+  if (v2Trade?.executionPrice?.baseCurrency?.symbol === "BUSD" && 
+      v2Trade?.executionPrice?.quoteCurrency?.symbol === "BNB") {
+        console.log("oracle price => ", price)
+        const priceAsNumber = parseFloat(formatBigNumberToFixed(price, 3, 8))
+        console.log("priceAsNumber => ", priceAsNumber);
+  } 
 
   const currencyBalances = {
     [Field.INPUT]: relevantTokenBalances[0],
