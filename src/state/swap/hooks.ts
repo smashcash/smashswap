@@ -226,13 +226,15 @@ export function useDerivedSwapInfo(): {
   const bestTradeExactIn = useTradeExactIn(isExactIn ? parsedAmount : undefined, outputCurrency ?? undefined)
   const bestTradeExactOut = useTradeExactOut(inputCurrency ?? undefined, !isExactIn ? parsedAmount : undefined)
 
-  const v2Trade = isExactIn ? bestTradeExactIn : bestTradeExactOut  
+  const v2Trade = isExactIn ? bestTradeExactIn : bestTradeExactOut
   const {price} = useGetLatestOraclePrice();
   if (v2Trade?.executionPrice?.baseCurrency?.symbol === "BNB" && 
       v2Trade?.executionPrice?.quoteCurrency?.symbol === "BUSD") {
         console.log("oracle price => ", price)
         const priceAsNumber = parseFloat(formatBigNumberToFixed(price, 3, 8))
         console.log("priceAsNumber => ", priceAsNumber);
+        // v2Trade?.executionPrice = new Price(v2Trade?.executionPrice?.baseCurrency, 
+        //   v2Trade?.executionPrice?.quoteCurrency, BigintIsh(price), BigintIsh(price));
   }  
 
   if (v2Trade?.executionPrice?.baseCurrency?.symbol === "BUSD" && 
@@ -240,6 +242,8 @@ export function useDerivedSwapInfo(): {
         console.log("oracle price => ", price)
         const priceAsNumber = parseFloat(formatBigNumberToFixed(price, 3, 8))
         console.log("priceAsNumber => ", priceAsNumber);
+        // v2Trade?.executionPrice = new Price(v2Trade?.executionPrice?.baseCurrency, 
+        //   v2Trade?.executionPrice?.quoteCurrency, BigintIsh(price), BigintIsh(price));
   } 
 
   const currencyBalances = {
